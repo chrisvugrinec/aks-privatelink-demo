@@ -4,6 +4,7 @@ RESOURCE_GROUP_NAME=chris-ms-data
 STORAGE_ACCOUNT_NAME=vuggietfstate
 CONTAINER_NAME_TIER2=tstate-aksprivatelinkdemo-tier2
 CONTAINER_NAME_TIER3=tstate-aksprivatelinkdemo-tier3
+CONTAINER_NAME_TIER4=tstate-aksprivatelinkdemo-tier4
 LOCATION=australiaeast
 
 # Create resource group
@@ -18,6 +19,7 @@ ACCOUNT_KEY=$(az storage account keys list -g $RESOURCE_GROUP_NAME --account-nam
 # Create blob container
 az storage container create --name $CONTAINER_NAME_TIER2 --account-name $STORAGE_ACCOUNT_NAME --account-key $ACCOUNT_KEY
 az storage container create --name $CONTAINER_NAME_TIER3 --account-name $STORAGE_ACCOUNT_NAME --account-key $ACCOUNT_KEY
+az storage container create --name $CONTAINER_NAME_TIER4 --account-name $STORAGE_ACCOUNT_NAME --account-key $ACCOUNT_KEY
 
 echo "storage_account_name: $STORAGE_ACCOUNT_NAME"
 echo "container_name: $CONTAINER_NAME_TIER2"

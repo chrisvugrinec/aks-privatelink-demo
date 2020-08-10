@@ -4,6 +4,7 @@ resource "azurerm_subnet" "demo" {
   resource_group_name  = var.mgmt-rg
   address_prefixes     = [var.aks-subnet-cidr]
   service_endpoints    = ["Microsoft.KeyVault","Microsoft.ContainerRegistry","Microsoft.AzureCosmosDB"]
+  enforce_private_link_service_network_policies = true
 }
 
 resource "azurerm_kubernetes_cluster" "demo" {
