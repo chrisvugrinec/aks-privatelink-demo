@@ -27,6 +27,7 @@ module "app1-team" {
   dns-zone      = "${var.project_name}.service.local"
   mgmt-vnet     = var.mgmt-vnet
   mgmt-rg       = "${var.environment}-${var.location}-2-${var.project_name}-mgmt-resources"
+  aks-vnet-cidr = "15.1.0.0/16"
   aks-subnet-cidr = "15.1.2.0/24"
 }
 

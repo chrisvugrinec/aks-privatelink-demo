@@ -1,18 +1,9 @@
-resource "azurerm_subnet" "demo" {
-  name                 = "${var.aks-name}-subnet"
-  virtual_network_name = var.aks-vnet
-  resource_group_name  = var.mgmt-rg
-  address_prefixes     = [var.aks-subnet-cidr]
-  service_endpoints    = ["Microsoft.KeyVault","Microsoft.ContainerRegistry","Microsoft.AzureCosmosDB"]
-  enforce_private_link_service_network_policies = true
-}
-
 resource "azurerm_kubernetes_cluster" "demo" {
   name                = var.aks-name
   location            = var.location
   resource_group_name = var.rg-name
   dns_prefix          = var.aks-name
-  depends_on          = [azurerm_resource_group.demo]
+  depends_on          = [azurerm_subnet.demo]
 
   default_node_pool {
     name           = "pool1"

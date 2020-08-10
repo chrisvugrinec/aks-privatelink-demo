@@ -10,14 +10,6 @@ variable "project_name" {}
 variable "mgmt-rg" {}
 variable "location" {}
 
-variable "aks-vnet" {
-  default = "vuggie-aks-aksprivatelinkdemo-vnet"
-}
-
-variable "aks-vnet-cidr" {
-  default = "15.1.0.0/16"
-}
-
 variable "mgmt-vnet" {
   default = "vuggie-mgmt-aksprivatelinkdemo-vnet"
 }
