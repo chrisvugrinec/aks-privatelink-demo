@@ -3,7 +3,7 @@
 ## Intro
 
 One of the concerns when linking Networks together is the depletion of available IP-addresses.
-This is especially the case if you are using Azure Kubernetes Services with CNI as network architecture; with CNI every pod on the AKS cluster gets it's own IP address.
+This is especially the case if you are using Azure Kubernetes Services with CNI; with CNI every pod on the AKS cluster gets it's own IP address.
 Azure Private Link and Azure Private Endpoint can link your available Kubernetes services over different networks without VNET peering. 
 This makes it possible to use different VNETs everytime you roll out an AKS cluster. Now you do not have to worry about overlapping IP addresses or depletion of available IP adresses.
 
@@ -114,3 +114,4 @@ resource "azurerm_private_dns_a_record" "poker_demo" {
 ## Links
 
 - Private Link documentation; https://docs.microsoft.com/en-us/azure/private-link/
+- Terraform Private Link documentation; https://www.terraform.io/docs/providers/azurerm/r/private_link_service.html
