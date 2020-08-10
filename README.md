@@ -34,7 +34,7 @@ This cookbook rolls out an AKS cluster and deploys 2 services. Making the servic
 After completion of the script, rollout the remaining terraform plan:
 
 ```
-terraform plan plan.out
+terraform apply plan.out
 
 ```
 
@@ -61,6 +61,55 @@ Poker service:
 ```
 curl  -H "Content-Type: application/json"  http://poker.apimdemo.service.local/pokerhost/v1/testdeal?nrOfPlayers=2
 ```
+
+## Terraform privatelink learnings
+
+The subnet on the management hub needs to have the `enforce_private_link_endpoint_network_policies` set to true as it will host the private endpoint later on:
+
+```
+resource "azurerm_subnet" "mgmt-subnet" {
+  name                 = var.mgmt-subnet
+  resource_group_name  = azurerm_resource_group.network-rg.name
+  virtual_network_name = azurerm_virtual_network.mgmt-vnet.name
+  address_prefixes       = [var.mgmt-subnet-cidr]
+  enforce_private_link_endpoint_network_policies = true
+}
+```
+
+The subnet on the aks spoke needs to have the `enforce_private_link_service_network_policies` set to true as it will host the private link service to the internal loadbalancer
+
+```
+resource "azurerm_subnet" "demo" {
+  name                 = "${var.aks-name}-subnet"
+  virtual_network_name = var.aks-vnet
+  resource_group_name  = var.rg-name
+  address_prefixes     = [var.aks-subnet-cidr]
+  service_endpoints    = ["Microsoft.KeyVault","Microsoft.ContainerRegistry","Microsoft.AzureCosmosDB"]
+  enforce_private_link_service_network_policies = true
+  depends_on          = [azurerm_resource_group.demo,azurerm_virtual_network.demo]
+}
+```
+
+The setup of the Ingress controller is post AKS deployment. 
+The IP address of the Private Endpoint cannot be set Statically, it is determined when the endpoint is created.
+Therefore the DNS zone can only be created when the private endpoint has been made and the IP address has been assigned.
+We create the DNS zone entries pointing to the private endpoint with the following reference:
+`azurerm_private_endpoint.demo.private_service_connection[0].private_ip_address`
+
+Making the `azurerm_private_dns_a_record` looking like this:
+
+```
+resource "azurerm_private_dns_a_record" "poker_demo" {
+  name                = "poker"
+  zone_name           = azurerm_private_dns_zone.demo.name
+  resource_group_name = var.mgmt_rg_name
+  ttl                 = 300
+  records             = [azurerm_private_endpoint.demo.private_service_connection[0].private_ip_address]
+  depends_on          = [azurerm_private_dns_zone_virtual_network_link.demo]
+}
+```
+
+
 
 ## Links
 
